@@ -1,41 +1,57 @@
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ôn Thi Trắc Nghiệm Ngành Điện</title>
+    <title>ÔN THI A3-ĐĂKRE2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Hệ Thống Ôn Thi Trắc Nghiệm</h1>
-            <p>Nội dung: Thông tư 05/2025 & 06/2025/TT-BCT</p>
+            <p>👥 Online: 1</p>
+            <h1>ÔN THI A3-ĐĂKRE2</h1>
         </header>
 
-        <!-- Màn hình chọn chế độ thi -->
-        <div id="setup-box" class="card">
-            <h3>Chọn số lượng câu hỏi để bắt đầu:</h3>
-            <div class="controls">
-                <button class="btn-start" onclick="startQuiz(60)">Làm 60 câu</button>
-                <button class="btn-start" onclick="startQuiz(280)">Làm toàn bộ bộ đề</button>
+        <!-- Màn hình chính -->
+        <div id="home-screen">
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Nhập tên thí sinh...">
+            </div>
+            <div class="main-controls">
+                <button onclick="startQuiz(60)">📝 Làm 60 câu</button>
+                <button onclick="startQuiz(343)">📚 Làm 343 câu</button>
+                <button onclick="resetLeaderboard()">🧹 Reset BXH</button>
+            </div>
+
+            <div class="leaderboard-container">
+                <div class="bxh-card">
+                    <h3>🏆 BXH 60 CÂU</h3>
+                    <table id="bxh-60">
+                        <thead><tr><th>Tên</th><th>Điểm</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="bxh-card">
+                    <h3>🏆 BXH 343 CÂU</h3>
+                    <table id="bxh-343">
+                        <thead><tr><th>Tên</th><th>Điểm</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Màn hình làm bài thi -->
-        <div id="quiz-box" style="display:none;">
-            <div id="result-summary" class="summary-card" style="display:none;">
-                <h2 id="score-text"></h2>
-                <button class="btn-reload" onclick="location.reload()">Làm bài mới</button>
+        <!-- Màn hình làm bài -->
+        <div id="quiz-screen" style="display:none;">
+            <div class="quiz-header sticky">
+                <button class="btn-nav" onclick="submitQuiz()">📤 Nộp bài</button>
+                <button class="btn-nav" onclick="location.reload()">🔄 Làm lại</button>
+                <div class="user-info">👤 <span id="display-name"></span> | 🎯 <span id="live-score">0</span>/<span id="total-count">0</span></div>
             </div>
-            
             <div id="quiz-content"></div>
-            
-            <div class="actions">
-                <button id="submit-btn" class="btn-submit" onclick="submitQuiz()">Nộp bài & Xem đáp án</button>
-            </div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-
