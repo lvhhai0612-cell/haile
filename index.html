@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÔN THI A3-ĐĂKRE2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Màn hình chính (Trang chủ) -->
+        <div id="home-screen">
+            <header>
+                <p>👤 Online: 1</p>
+                <h1>ÔN THI A3-ĐĂKRE2</h1>
+            </header>
+
+            <div class="input-section">
+                <input type="text" id="username" placeholder="Nhập tên thí sinh...">
+            </div>
+
+            <div class="main-buttons">
+                <button onclick="startQuiz(60)">📋 Làm 60 câu</button>
+                <button onclick="startQuiz(343)">📚 Làm 343 câu</button>
+                <button onclick="resetLeaderboard()">⚙️ Reset BXH</button>
+            </div>
+
+            <div class="leaderboard-grid">
+                <div class="bxh-card">
+                    <h3>🏆 BXH 60 CÂU</h3>
+                    <table id="bxh-60">
+                        <thead><tr><th>Tên</th><th>Điểm</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="bxh-card">
+                    <h3>🏆 BXH 343 CÂU</h3>
+                    <table id="bxh-343">
+                        <thead><tr><th>Tên</th><th>Điểm</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Màn hình làm bài -->
+        <div id="quiz-screen" style="display:none;">
+            <div class="quiz-nav">
+                <button class="btn-action" onclick="submitQuiz()">📤 Nộp bài</button>
+                <button class="btn-action" onclick="location.reload()">🔄 Làm lại</button>
+                <div class="quiz-info">
+                    <span id="display-name"></span> | 🎯 <span id="current-score">0</span>/<span id="total-ques">0</span>
+                </div>
+            </div>
+            <hr>
+            <div id="quiz-content"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
