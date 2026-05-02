@@ -1,3 +1,4 @@
+// Dữ liệu câu hỏi dựa trên các Thông tư 05 và 06/2025/TT-BCT
 const originalQuiz = [
     {
         q: "Theo Thông tư 05/2025/TT-BCT: Tổ máy phát điện của bạn phải vận hành trong dải tần số nào?",
@@ -8,22 +9,23 @@ const originalQuiz = [
         correct: "D"
     },
     {
-        q: "Theo Thông tư 06/2025/TT-BCT: Điều khiển tần số thứ cấp yêu cầu độ lệch chuẩn không quá bao nhiêu?",
+        q: "Theo Thông tư 06/2025/TT-BCT: Điều khiển tần số thứ cấp yêu cầu độ lệch chuẩn không quá?",
         A: "50 +- 0,1 Hz",
         B: "50 +- 0,5 Hz",
         C: "50 +- 0,02 Hz",
         D: "50 +- 0,2 Hz",
         correct: "D"
     }
+    // Bạn hãy thêm tiếp các câu hỏi khác vào đây theo mẫu trên
 ];
 
 let currentQuestions = [];
 
 function startQuiz(limit) {
-    // Xáo trộn ngẫu nhiên và lấy số lượng câu theo yêu cầu
+    // Xáo trộn và lấy số lượng câu hỏi yêu cầu
     currentQuestions = [...originalQuiz].sort(() => 0.5 - Math.random()).slice(0, limit);
     
-    document.getElementById('setup-box').style.display = 'none';
+    document.querySelector('.controls').style.display = 'none';
     document.getElementById('quiz-box').style.display = 'block';
     
     renderQuiz();
@@ -32,43 +34,26 @@ function startQuiz(limit) {
 function renderQuiz() {
     const container = document.getElementById('quiz-content');
     container.innerHTML = currentQuestions.map((item, index) => `
-        <div class="question-item" id="q-container-${index}">
+        <div class="question-item">
             <p><strong>Câu ${index + 1}:</strong> ${item.q}</p>
-            <label><input type="radio" name="q${index}" value="A"> A. ${item.A}</label>
-            <label><input type="radio" name="q${index}" value="B"> B. ${item.B}</label>
-            <label><input type="radio" name="q${index}" value="C"> C. ${item.C}</label>
+            <label><input type="radio" name="q${index}" value="A"> A. ${item.A}</label><br>
+            <label><input type="radio" name="q${index}" value="B"> B. ${item.B}</label><br>
+            <label><input type="radio" name="q${index}" value="C"> C. ${item.C}</label><br>
             <label><input type="radio" name="q${index}" value="D"> D. ${item.D}</label>
-            <div id="ans-${index}" class="feedback"></div>
         </div>
     `).join('');
 }
 
 function submitQuiz() {
     let score = 0;
-    
     currentQuestions.forEach((item, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        const qContainer = document.getElementById(`q-container-${index}`);
-        const feedback = document.getElementById(`ans-${index}`);
-        const userValue = selected ? selected.value : "Chưa trả lời";
-
-        // Khóa không cho chọn lại
-        const options = document.querySelectorAll(`input[name="q${index}"]`);
-        options.forEach(opt => opt.disabled = true);
-
-        if (userValue === item.correct) {
+        if (selected && selected.value === item.correct) {
             score++;
-            qContainer.classList.add('correct');
-            feedback.innerHTML = `<span style="color: green;">✔ Đúng!</span>`;
-        } else {
-            qContainer.classList.add('wrong');
-            feedback.innerHTML = `<span style="color: red;">✘ Sai. Đáp án đúng là: ${item.correct}</span>`;
         }
     });
 
-    // Hiện bảng điểm và cuộn lên đầu
-    document.getElementById('result-summary').style.display = 'block';
-    document.getElementById('score-text').innerText = `Kết quả: ${score} / ${currentQuestions.length} câu đúng`;
-    document.getElementById('submit-btn').style.display = 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('quiz-box').style.display = 'none';
+    document.getElementById('result-box').style.display = 'block';
+    document.getElementById('score').innerText = `Bạn đúng ${score}/${currentQuestions.length} câu.`;
 }
