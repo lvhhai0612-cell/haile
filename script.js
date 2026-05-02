@@ -45,11 +45,40 @@ function renderQuiz() {
 
 function submitQuiz() {
     let score = 0;
+    const container = document.getElementById('quiz-content');
+    
+    // Duyệt qua từng câu hỏi để kiểm tra kết quả
     currentQuestions.forEach((item, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const questionDiv = document.getElementsByClassName('question-item')[index];
+        
+        let resultHTML = `<div class="result-detail">`;
+        
         if (selected && selected.value === item.correct) {
             score++;
+            questionDiv.style.backgroundColor = "#d4edda"; // Màu xanh cho câu đúng
+            resultHTML += `<b style="color: green;">✔ Đúng!</b>`;
+        } else {
+            questionDiv.style.backgroundColor = "#f8d7da"; // Màu đỏ cho câu sai
+            const userAnswer = selected ? selected.value : "Chưa chọn";
+            resultHTML += `<b style="color: red;">✘ Sai!</b> (Bạn chọn: ${userAnswer} - Đáp án đúng: ${item.correct})`;
         }
+        
+        resultHTML += `</div>`;
+        
+        // Hiển thị kết quả ngay dưới mỗi câu hỏi
+        const existingResult = questionDiv.querySelector('.result-detail');
+        if (existingResult) existingResult.remove(); // Xóa kết quả cũ nếu có
+        questionDiv.insertAdjacentHTML('beforeend', resultHTML);
+    });
+
+    // Hiển thị tổng điểm ở phía trên hoặc dưới
+    document.getElementById('result-box').style.display = 'block';
+    document.getElementById('score').innerText = `Kết quả cuối cùng: Bạn đúng ${score}/${currentQuestions.length} câu.`;
+    
+    // Cuộn lên đầu trang để xem điểm
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
     });
 
     document.getElementById('quiz-box').style.display = 'none';
