@@ -8,23 +8,22 @@ const originalQuiz = [
         correct: "D"
     },
     {
-        q: "Theo Thông tư 06/2025/TT-BCT: Điều khiển tần số thứ cấp yêu cầu độ lệch chuẩn không quá?",
+        q: "Theo Thông tư 06/2025/TT-BCT: Điều khiển tần số thứ cấp yêu cầu độ lệch chuẩn không quá bao nhiêu?",
         A: "50 +- 0,1 Hz",
         B: "50 +- 0,5 Hz",
         C: "50 +- 0,02 Hz",
         D: "50 +- 0,2 Hz",
         correct: "D"
     }
-    // Bạn hãy thêm tiếp các câu hỏi khác vào đây theo mẫu trên
 ];
 
 let currentQuestions = [];
 
 function startQuiz(limit) {
-    // Xáo trộn và lấy số lượng câu hỏi yêu cầu
+    // Xáo trộn ngẫu nhiên và lấy số lượng câu theo yêu cầu
     currentQuestions = [...originalQuiz].sort(() => 0.5 - Math.random()).slice(0, limit);
     
-    document.querySelector('.controls').style.display = 'none';
+    document.getElementById('setup-box').style.display = 'none';
     document.getElementById('quiz-box').style.display = 'block';
     
     renderQuiz();
@@ -33,55 +32,43 @@ function startQuiz(limit) {
 function renderQuiz() {
     const container = document.getElementById('quiz-content');
     container.innerHTML = currentQuestions.map((item, index) => `
-        <div class="question-item">
+        <div class="question-item" id="q-container-${index}">
             <p><strong>Câu ${index + 1}:</strong> ${item.q}</p>
-            <label><input type="radio" name="q${index}" value="A"> A. ${item.A}</label><br>
-            <label><input type="radio" name="q${index}" value="B"> B. ${item.B}</label><br>
-            <label><input type="radio" name="q${index}" value="C"> C. ${item.C}</label><br>
+            <label><input type="radio" name="q${index}" value="A"> A. ${item.A}</label>
+            <label><input type="radio" name="q${index}" value="B"> B. ${item.B}</label>
+            <label><input type="radio" name="q${index}" value="C"> C. ${item.C}</label>
             <label><input type="radio" name="q${index}" value="D"> D. ${item.D}</label>
+            <div id="ans-${index}" class="feedback"></div>
         </div>
     `).join('');
 }
 
 function submitQuiz() {
     let score = 0;
-    const container = document.getElementById('quiz-content');
     
-    // Duyệt qua từng câu hỏi để kiểm tra kết quả
     currentQuestions.forEach((item, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        const questionDiv = document.getElementsByClassName('question-item')[index];
-        
-        let resultHTML = `<div class="result-detail">`;
-        
-        if (selected && selected.value === item.correct) {
+        const qContainer = document.getElementById(`q-container-${index}`);
+        const feedback = document.getElementById(`ans-${index}`);
+        const userValue = selected ? selected.value : "Chưa trả lời";
+
+        // Khóa không cho chọn lại
+        const options = document.querySelectorAll(`input[name="q${index}"]`);
+        options.forEach(opt => opt.disabled = true);
+
+        if (userValue === item.correct) {
             score++;
-            questionDiv.style.backgroundColor = "#d4edda"; // Màu xanh cho câu đúng
-            resultHTML += `<b style="color: green;">✔ Đúng!</b>`;
+            qContainer.classList.add('correct');
+            feedback.innerHTML = `<span style="color: green;">✔ Đúng!</span>`;
         } else {
-            questionDiv.style.backgroundColor = "#f8d7da"; // Màu đỏ cho câu sai
-            const userAnswer = selected ? selected.value : "Chưa chọn";
-            resultHTML += `<b style="color: red;">✘ Sai!</b> (Bạn chọn: ${userAnswer} - Đáp án đúng: ${item.correct})`;
+            qContainer.classList.add('wrong');
+            feedback.innerHTML = `<span style="color: red;">✘ Sai. Đáp án đúng là: ${item.correct}</span>`;
         }
-        
-        resultHTML += `</div>`;
-        
-        // Hiển thị kết quả ngay dưới mỗi câu hỏi
-        const existingResult = questionDiv.querySelector('.result-detail');
-        if (existingResult) existingResult.remove(); // Xóa kết quả cũ nếu có
-        questionDiv.insertAdjacentHTML('beforeend', resultHTML);
     });
 
-    // Hiển thị tổng điểm ở phía trên hoặc dưới
-    document.getElementById('result-box').style.display = 'block';
-    document.getElementById('score').innerText = `Kết quả cuối cùng: Bạn đúng ${score}/${currentQuestions.length} câu.`;
-    
-    // Cuộn lên đầu trang để xem điểm
+    // Hiện bảng điểm và cuộn lên đầu
+    document.getElementById('result-summary').style.display = 'block';
+    document.getElementById('score-text').innerText = `Kết quả: ${score} / ${currentQuestions.length} câu đúng`;
+    document.getElementById('submit-btn').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-    });
-
-    document.getElementById('quiz-box').style.display = 'none';
-    document.getElementById('result-box').style.display = 'block';
-    document.getElementById('score').innerText = `Bạn đúng ${score}/${currentQuestions.length} câu.`;
 }
