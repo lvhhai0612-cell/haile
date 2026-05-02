@@ -1,28 +1,38 @@
-<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Thi Trắc Nghiệm Ngành Điện</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Thi Trắc Nghiệm Ngành Điện</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>ÔN TẬP THI TRẮC NGHIỆM NMTĐ ĐAKRE2</h1>
-        <div class="controls">
-            <button onclick="startQuiz(60)">Làm 60 câu</button>
-            <button onclick="startQuiz(280)">Làm toàn bộ</button>
+        <header>
+            <h1>Hệ Thống Ôn Thi Trắc Nghiệm</h1>
+            <p>Nội dung: Thông tư 05/2025 & 06/2025/TT-BCT</p>
+        </header>
+
+        <!-- Màn hình chọn chế độ thi -->
+        <div id="setup-box" class="card">
+            <h3>Chọn số lượng câu hỏi để bắt đầu:</h3>
+            <div class="controls">
+                <button class="btn-start" onclick="startQuiz(60)">Làm 60 câu</button>
+                <button class="btn-start" onclick="startQuiz(280)">Làm toàn bộ bộ đề</button>
+            </div>
         </div>
 
+        <!-- Màn hình làm bài thi -->
         <div id="quiz-box" style="display:none;">
-            <div id="timer">Thời gian còn lại: <span id="time">--:--</span></div>
+            <div id="result-summary" class="summary-card" style="display:none;">
+                <h2 id="score-text"></h2>
+                <button class="btn-reload" onclick="location.reload()">Làm bài mới</button>
+            </div>
+            
             <div id="quiz-content"></div>
-            <button class="btn-submit" onclick="submitQuiz()">Nộp bài</button>
-        </div>
-
-        <div id="result-box" style="display:none;">
-            <h2>Kết quả của bạn</h2>
-            <p id="score"></p>
-            <button onclick="location.reload()">Làm lại</button>
+            
+            <div class="actions">
+                <button id="submit-btn" class="btn-submit" onclick="submitQuiz()">Nộp bài & Xem đáp án</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
