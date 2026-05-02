@@ -1,4 +1,4 @@
-// Dữ liệu câu hỏi dựa trên các Thông tư 05 và 06/2025/TT-BCT
+
 const originalQuiz = [
     {
         q: "Theo Thông tư 05/2025/TT-BCT: Tổ máy phát điện của bạn phải vận hành trong dải tần số nào?",
