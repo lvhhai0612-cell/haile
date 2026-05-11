@@ -1,223 +1,194 @@
-# Trang Thi Thử HTML/CSS/JavaScript
-
-```html
 <!DOCTYPE html>
 <html lang="vi">
+<h3 id="onlineCount">👥 Online: 0</h3>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ÔN THI A3 - ĐẮKRE2</title>
+<title>TỔNG HỢP CÂU HỎI TRẮC NGHIỆM ÔN TẬP THI TRƯỞNG CA A3-NMTĐ ĐĂKRE2</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        font-family:Arial, Helvetica, sans-serif;
-    }
+body { font-family: Arial; max-width: 1000px; margin: auto; padding:20px; }
 
-    body{
-        background:#f3f3f3;
-        padding:20px;
-        color:#222;
-    }
+#menu { text-align:center; }
 
-    .container{
-        max-width:1100px;
-        margin:auto;
-    }
+button{
+  padding:10px 20px;
+  margin:5px;
+  cursor:pointer;
+}
 
-    h1{
-        text-align:center;
-        margin-bottom:20px;
-        color:#000;
-    }
+/* ===== BẢNG XẾP HẠNG TRÁI PHẢI ===== */
+#leaderboards{
+  display:flex;
+  gap:20px;
+  margin-top:20px;
+}
 
-    .top-bar{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:20px;
-        flex-wrap:wrap;
-        gap:10px;
-    }
+.lb{
+  flex:1;
+  border:2px solid #ddd;
+  padding:10px;
+  border-radius:10px;
+}
 
-    .online{
-        font-size:18px;
-        font-weight:bold;
-    }
+.lb h3{
+  text-align:center;
+}
 
-    .menu{
-        text-align:center;
-        margin-bottom:30px;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+}
 
-    input[type="text"]{
-        width:300px;
-        padding:10px;
-        border:1px solid #bbb;
-        border-radius:6px;
-        margin-bottom:15px;
-    }
+th,td{
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+}
 
-    button{
-        padding:12px 20px;
-        border:none;
-        border-radius:6px;
-        cursor:pointer;
-        background:#1565c0;
-        color:white;
-        font-size:15px;
-        margin:5px;
-        transition:0.3s;
-    }
+/* mobile */
+@media(max-width:600px){
+  #leaderboards{
+    flex-direction:column;
+  }
+}
 
-    button:hover{
-        background:#0d47a1;
-    }
+/* quiz */
+.top-bar{
+  position:sticky;
+  top:0;
+  background:white;
+  padding:10px;
+  border-bottom:2px solid #ddd;
+  display:flex;
+  justify-content:flex-start; /* 🔥 đổi dòng này */
+  gap:10px; /* tạo khoảng cách giữa nút */
+}
 
-    .leaderboards{
-        display:flex;
-        gap:20px;
-        margin-top:20px;
-        flex-wrap:wrap;
-    }
+.question{
+  border:1px solid #ccc;
+  padding:10px;
+  margin:10px 0;
+  border-radius:8px;
+}
 
-    .board{
-        flex:1;
-        min-width:300px;
-        background:white;
-        padding:20px;
-        border-radius:12px;
-        box-shadow:0 0 10px rgba(0,0,0,0.1);
-    }
+.correct{ color:green; font-weight:bold; }
+.wrong{ color:red; font-weight:bold; }
 
-    .board h2{
-        text-align:center;
-        margin-bottom:15px;
-    }
-
-    table{
-        width:100%;
-        border-collapse:collapse;
-    }
-
-    table th,
-    table td{
-        border:1px solid #ccc;
-        padding:10px;
-        text-align:center;
-    }
-
-    .quiz-container{
-        display:none;
-        background:white;
-        padding:25px;
-        border-radius:12px;
-        margin-top:30px;
-        box-shadow:0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .question-box{
-        margin-bottom:25px;
-        border:1px solid #ccc;
-        padding:15px;
-        border-radius:10px;
-    }
-
-    .question-title{
-        font-weight:bold;
-        margin-bottom:10px;
-    }
-
-    .option{
-        margin:8px 0;
-    }
-
-    .submit-area{
-        text-align:center;
-        margin-top:20px;
-    }
-
-    .result{
-        text-align:center;
-        font-size:24px;
-        font-weight:bold;
-        margin-top:20px;
-        color:green;
-    }
-
-    @media(max-width:768px){
-        input[type="text"]{
-            width:100%;
-        }
-
-        .leaderboards{
-            flex-direction:column;
-        }
-    }
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<h2>TỔNG HỢP CÂU HỎI TRẮC NGHIỆM ÔN TẬP THI TRƯỞNG CA A3-NMTĐ ĐĂKRE2</h2>
 
-    <div class="top-bar">
-        <div class="online">👥 Online: <span id="onlineCount">6</span></div>
-    </div>
+<!-- MENU -->
+<div id="menu">
 
-    <h1>ÔN THI A3 - ĐẮKRE2</h1>
+<input id="playerName" placeholder="Nhập tên thí sinh..." style="padding:10px;width:250px;">
+<br><br>
 
-    <div class="menu">
-        <input type="text" id="userName" placeholder="Nhập tên thí sinh...">
-        <br>
+<button onclick="startQuiz('60')">📝 Làm 60 câu</button>
+<button onclick="startQuiz('full')">📚 Làm 435 câu</button>
+<button onclick="resetLeaderboard()">🧹 Reset BXH</button>
 
-        <button onclick="startQuiz(5)">📝 Làm 60 câu</button>
-        <button onclick="startQuiz(10)">📚 Làm 435 câu</button>
-        <button onclick="resetBXH()">🧹 Reset BXH</button>
-    </div>
+<!-- ===== BXH ===== -->
+<div id="leaderboards">
 
-    <div class="leaderboards">
+  <div class="lb">
+    <h3>🏆 BXH 60 CÂU</h3>
+    <table id="table60">
+      <tr><th>Tên</th><th>Điểm</th></tr>
+    </table>
+  </div>
 
-        <div class="board">
-            <h2>🏆 BXH</h2>
+  <div class="lb">
+    <h3>🏆 BXH 435 CÂU</h3>
+    <table id="tableFull">
+      <tr><th>Tên</th><th>Điểm</th></tr>
+    </table>
+  </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tên</th>
-                        <th>Điểm</th>
-                    </tr>
-                </thead>
+</div>
 
-                <tbody id="leaderboardBody">
+</div>
 
-                </tbody>
-            </table>
-        </div>
+<!-- QUIZ -->
+<div id="quizScreen" style="display:none">
 
-    </div>
+<div class="top-bar">
+  <button onclick="submitQuiz()">📤 Nộp bài</button>
+  <button onclick="location.reload()">🔄 Làm lại</button>
+</div>
 
+<h3 id="score"></h3>
 
-    <div class="quiz-container" id="quizContainer">
-
-        <div id="quizArea"></div>
-
-        <div class="submit-area">
-            <button onclick="submitQuiz()">📤 Nộp bài</button>
-            <button onclick="reloadQuiz()">🔄 Làm lại</button>
-        </div>
-
-        <div class="result" id="result"></div>
-
-    </div>
+<div id="quiz"></div>
 
 </div>
 
 <script>
+function resetLeaderboard(){
 
-const questionBank = [
-    {
+  // 🔐 mật khẩu (bạn có thể đổi)
+  const PASSWORD = "123456";
+
+  let pass = prompt("Nhập mật khẩu để reset bảng xếp hạng:");
+
+  if(pass !== PASSWORD){
+    alert("❌ Sai mật khẩu!");
+    return;
+  }
+
+  if(!confirm("⚠️ Bạn có chắc muốn xoá toàn bộ bảng xếp hạng?")){
+    return;
+  }
+
+  // 🗑 xoá dữ liệu Firebase
+  db.ref("leaderboard_60").remove();
+  db.ref("leaderboard_full").remove();
+
+  alert("✅ Đã reset bảng xếp hạng!");
+}
+
+// ===== FIREBASE =====
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "thi-a3-dakre2-1f6ae.firebaseapp.com",
+  databaseURL: "https://thi-a3-dakre2-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "thi-a3-dakre2-1f6ae"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+// ===== ONLINE USER =====
+let userId = Date.now(); // tạo ID riêng
+
+let ref = db.ref("online_users/" + userId);
+
+// ghi trạng thái online
+ref.set(true);
+
+// 🔥 tự xoá khi mất kết nối (quan trọng nhất)
+ref.onDisconnect().remove();
+db.ref("online_users").on("value", snap=>{
+  let data = snap.val();
+
+  let count = 0;
+  if(data){
+    count = Object.keys(data).length;
+  }
+
+  document.getElementById("onlineCount").innerText =
+    "👥 Online: " + count;
+});
+
+// ===== DATA =====
+let originalQuiz = [
+
+{
   q: "Theo Thông tư 05/2025/TT-BCT: Tổ máy phát điện của nhà máy thủy điện và nhà máy nhiệt điện có tổng công suất lắp đặt từ 30 MW trở xuống đấu nối vào lưới điện phân phối phải có khả năng phát công suất tác dụng định mức liên tục trong dải tần số của hệ thống điện?",
   A: "48 Hz đến 50 Hz.",
   B: "48 Hz đến 51 Hz.",
@@ -1038,7 +1009,7 @@ const questionBank = [
   A: "Đang vận hành bình thường.",
   B: "Đã cắt điện nhưng chưa làm tiếp địa an toàn.",
   C: "Có biển báo \"Thiết bị có điện\".",
-  D: "Cả a và b đều đúng.",
+  D: "Cả A và C đều đúng.",
   correct: "D"
 },
 {
@@ -3319,135 +3290,158 @@ const questionBank = [
     B: "Trước khi thực hiện phiếu thao tác.",
     C: "Trước khi thao tác đóng dao tiếp địa.",
     D: "Sau khi thực hiện thao tác xa.",
+ }
 ];
 
-let currentQuestions = [];
-
-function shuffleArray(array){
-    return array.sort(() => Math.random() - 0.5);
+// ===== CHUYỂN DATA =====
+function convertData(data){
+  const map={A:0,B:1,C:2,D:3};
+  return data.map(x=>({
+    question:x.q,
+    options:[x.A,x.B,x.C,x.D],
+    answer:map[x.correct]
+  }));
 }
 
-function startQuiz(number){
+let questions = convertData(originalQuiz);
 
-    const name = document.getElementById("userName").value.trim();
+// ===== BIẾN =====
+let current=[];
+let name="";
+let mode="";
+let answers={};
+let submitted=false;
 
-    if(name === ""){
-        alert("Vui lòng nhập tên thí sinh!");
-        return;
-    }
+// ===== START =====
 
-    document.getElementById("quizContainer").style.display = "block";
+function startQuiz(m){
 
-    currentQuestions = shuffleArray([...questionBank]).slice(0, number);
+  let n=document.getElementById("playerName").value.trim();
+  if(!n){alert("Nhập tên!");return}
 
-    renderQuestions();
+  name=n;
+  mode=m;
+
+  document.getElementById("menu").style.display="none";
+  document.getElementById("quizScreen").style.display="block";
+
+  // 🔥 RANDOM TRƯỚC
+  let shuffled = shuffle([...questions]);
+
+  if(m==="full"){
+    current = shuffled;
+  }else{
+    current = shuffled.slice(0,60);
+  }
+
+  answers={};
+  submitted=false;
+
+  render();
 }
 
-function renderQuestions(){
 
-    const quizArea = document.getElementById("quizArea");
+// ===== RENDER =====
+function render(){
+  let html="";
 
-    quizArea.innerHTML = "";
+  current.forEach((q,i)=>{
+    html+=`<div class="question"><b>Câu ${i+1}: ${q.question}</b><br>`;
 
-    currentQuestions.forEach((q, index) => {
+    q.options.forEach((o,j)=>{
+      let cls="";
+      let mark="";
 
-        let html = `
-            <div class="question-box">
-                <div class="question-title">
-                    Câu ${index + 1}: ${q.question}
-                </div>
-        `;
+      if(submitted){
+        if(j===q.answer){cls="correct";mark="✔"}
+        if(answers[i]===j && j!==q.answer){cls="wrong";mark="✘"}
+      }
 
-        q.options.forEach((opt, i) => {
-            html += `
-                <div class="option">
-                    <label>
-                        <input type="radio" name="question${index}" value="${i}">
-                        ${String.fromCharCode(65 + i)}. ${opt}
-                    </label>
-                </div>
-            `;
-        });
-
-        html += `</div>`;
-
-        quizArea.innerHTML += html;
+      html+=`
+      <label class="${cls}">
+        <input type="radio" name="q${i}" value="${j}"
+        ${answers[i]==j?"checked":""}
+        ${submitted?"disabled":""}
+        onclick="saveAns(${i},${j})">
+        ${["A","B","C","D"][j]}. ${o} ${mark}
+      </label><br>`;
     });
 
-    document.getElementById("result").innerHTML = "";
+    html+="</div>";
+  });
+
+  document.getElementById("quiz").innerHTML=html;
 }
 
+// ===== SAVE =====
+function saveAns(i,j){
+  answers[i]=j;
+}
+
+// ===== SUBMIT =====
 function submitQuiz(){
+  submitted=true;
+  let score=0;
 
-    let score = 0;
+  current.forEach((q,i)=>{
+    if(answers[i]===q.answer) score++;
+  });
 
-    currentQuestions.forEach((q, index) => {
+  document.getElementById("score").innerText=
+    `👤 ${name} | 🎯 ${score}/${current.length}`;
 
-        const selected = document.querySelector(`input[name="question${index}"]:checked`);
+  saveScore(name,score,current.length);
 
-        if(selected){
-            if(parseInt(selected.value) === q.answer){
-                score++;
-            }
-        }
-    });
-
-    document.getElementById("result").innerHTML = `Bạn đạt ${score}/${currentQuestions.length} điểm`;
-
-    saveLeaderboard(score, currentQuestions.length);
+  render();
 }
 
-function saveLeaderboard(score, total){
+// ===== LƯU FIREBASE =====
+function saveScore(n,s,t){
+  let path=(mode==="full")?"leaderboard_full":"leaderboard_60";
 
-    const name = document.getElementById("userName").value.trim();
-
-    let data = JSON.parse(localStorage.getItem("leaderboard")) || [];
-
-    data.push({
-        name:name,
-        score:score,
-        total:total
-    });
-
-    data.sort((a,b) => b.score - a.score);
-
-    localStorage.setItem("leaderboard", JSON.stringify(data));
-
-    loadLeaderboard();
+  db.ref(path+"/"+Date.now()).set({
+    name:n,
+    score:s,
+    total:t
+  });
 }
 
-function loadLeaderboard(){
+// ===== LOAD BXH =====
+db.ref("leaderboard_60").on("value",snap=>{
+  loadTable("table60",snap.val());
+});
 
-    const data = JSON.parse(localStorage.getItem("leaderboard")) || [];
+db.ref("leaderboard_full").on("value",snap=>{
+  loadTable("tableFull",snap.val());
+});
 
-    const body = document.getElementById("leaderboardBody");
+function loadTable(id,data){
+  let t=document.getElementById(id);
+  t.innerHTML="<tr><th>Tên</th><th>Điểm</th></tr>";
 
-    body.innerHTML = "";
+  if(!data) return;
 
-    data.slice(0,10).forEach(item => {
+  let arr=Object.values(data);
 
-        body.innerHTML += `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.score}/${item.total}</td>
-            </tr>
-        `;
-    });
+  arr.sort((a,b)=>(b.score/b.total)-(a.score/a.total));
+
+  arr.slice(0,10).forEach(x=>{
+    t.innerHTML+=`
+    <tr>
+      <td>${x.name}</td>
+      <td>${x.score}/${x.total}</td>
+    </tr>`;
+  });
 }
 
-function resetBXH(){
-
-    if(confirm("Bạn có chắc muốn xóa bảng xếp hạng?")){
-        localStorage.removeItem("leaderboard");
-        loadLeaderboard();
-    }
+// ===== SHUFFLE =====
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
-
-function reloadQuiz(){
-    renderQuestions();
-}
-
-loadLeaderboard();
 
 </script>
 
